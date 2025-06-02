@@ -18,7 +18,6 @@
 
 ;; TaskTracker固有フィールド
 (s/def ::local-memo ::core/memo)
-(s/def ::business-category ::core/business-category)
 (s/def ::is-synced boolean?)
 (s/def ::last-synced-at ::core/optional-timestamp)
 (s/def ::created-at ::core/timestamp)
@@ -58,7 +57,7 @@
 
 ;; ローカルメモの更新
 (s/def ::task-memo-update-request
-  (s/keys :req [:task-id ::local-memo]))
+  (s/keys :req [::task-id ::local-memo]))
 
 ;; タスククローズ要求
 (s/def ::task-close-request

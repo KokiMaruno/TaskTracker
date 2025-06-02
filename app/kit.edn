@@ -1,0 +1,8 @@
+{:full-name "tasktracker/app"
+ :ns-name   "tasktracker.app"
+ :sanitized "tasktracker/app"
+ :name      "app"
+ :modules   {:root         "modules"
+             :repositories [{:url  "https://github.com/kit-clj/modules.git"
+                             :tag  "master"
+                             :name "kit-modules"}]}}

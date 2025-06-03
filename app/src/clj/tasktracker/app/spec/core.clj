@@ -13,6 +13,7 @@
 (s/def ::timestamp inst?)
 (s/def ::optional-timestamp (s/nilable inst?))
 
+
 ;; Gitlab関連
 (s/def ::gitlab-issue-id pos-int?)
 (s/def ::gitlab-project-id pos-int?)
@@ -23,6 +24,7 @@
 (s/def ::time-entry-status #{:running :completed})
 
 ;; ラベル関連
+(s/def ::label string?)
 (s/def ::labels (s/coll-of string? :kind vector? :min-count 0))
 
 ;; 時間関連
@@ -41,6 +43,10 @@
   (if (and start-time end-time)
     (.before start-time end-time)
     true))
+(s/fdef valid-time-range?
+  :args (s/cat :start-time ::timestamp
+               :end-time ::timestamp)
+  :ret boolean?)
 
 (defn valid-duration?
   "duration-minutesが開始・終了時間と整合していることを確認"
@@ -49,6 +55,11 @@
     (let [calculated-minutes (/ (- (.getTime end-time) (.getTime start-time)) 60000)]
       (> (Math/abs (- calculated-minutes duration-mitutes)) 1))
     true))
+(s/fdef valid-duration?
+  :args (s/cat :start-time ::timestamp
+               :end-time ::timestamp
+               :duration-mitutes ::duration-minutes)
+  :ret boolean?)
 
 ;; プロジェクト関連
 (s/def ::project-name ::non-empty-string)

@@ -44,7 +44,7 @@
 
 ;; 時間記録開始用
 (s/def ::time-entry-start-request
-  (s/keys :req [::entry-id]
+  (s/keys :req [::gitlab-issue-id]
           :opt [::memo]))
 
 ;; 時間記録停止用

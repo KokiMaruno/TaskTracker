@@ -8,7 +8,6 @@
 (s/def ::label ::core/label)
 (s/def ::date ::core/timestamp)
 (s/def ::week-start-date ::core/timestamp)
-;;(s/def ::week-end-date ::core/timestamp)
 (s/def ::month (s/and string? #(re-matches #"\d{4}-\d{2}" %)))
 (s/def ::total-duration-minutes ::core/duration-minutes)
 (s/def ::percentage number?)

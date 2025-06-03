@@ -44,21 +44,18 @@
     (.before start-time end-time)
     true))
 (s/fdef valid-time-range?
-  :args (s/cat :start-time ::timestamp
-               :end-time ::timestamp)
+  :args (s/cat :time-map (s/keys :req-un [::start-time ::end-time]))
   :ret boolean?)
 
 (defn valid-duration?
   "duration-minutesが開始・終了時間と整合していることを確認"
-  [{:keys [start-time end-time duration-mitutes]}]
-  (if (and start-time end-time duration-mitutes)
+  [{:keys [start-time end-time duration-minutes]}]
+  (if (and start-time end-time duration-minutes)
     (let [calculated-minutes (/ (- (.getTime end-time) (.getTime start-time)) 60000)]
-      (> (Math/abs (- calculated-minutes duration-mitutes)) 1))
+      (> (Math/abs (- calculated-minutes duration-minutes)) 1))
     true))
 (s/fdef valid-duration?
-  :args (s/cat :start-time ::timestamp
-               :end-time ::timestamp
-               :duration-mitutes ::duration-minutes)
+  :args (s/cat :time-map (s/keys ::req-un [::start-time ::end-time ::duration-minutes]))
   :ret boolean?)
 
 ;; プロジェクト関連

@@ -13,7 +13,6 @@
 (s/def ::timestamp inst?)
 (s/def ::optional-timestamp (s/nilable inst?))
 
-
 ;; Gitlab関連
 (s/def ::gitlab-issue-id pos-int?)
 (s/def ::gitlab-project-id pos-int?)
@@ -29,6 +28,7 @@
 
 ;; 時間関連
 (s/def ::duration-minutes (s/and int? #(>= % 0)))
+(s/def ::non-zero-duration (s/and ::duration-minutes pos?))
 (s/def ::priority #{:low :medium :high :urgent})
 
 ;; メモ・説明
@@ -36,21 +36,76 @@
 (s/def ::description ::optional-string)
 (s/def ::title ::non-empty-string)
 
-;; バリデーション用ヘルパー関数
-(s/def ::start-time inst?)
-(s/def ::end-time inst?)
-
-(s/fdef valid-time-range?
-  :args (s/keys ::req [::start-time ::end-time])
-  :ret boolean?)
-
-(defn valid-time-range?
-  "開始時間が終了時間より前であることを確認"
-  [{:keys [::start-time ::end-time]}]
-  (if (and start-time end-time)
-    (.before start-time end-time)
-    true))
-
 ;; プロジェクト関連
 (s/def ::project-name ::non-empty-string)
 (s/def ::assignee ::optional-string)
+
+;; 時間範囲用のフィールド
+(s/def ::start-time ::timestamp)
+(s/def ::end-time ::timestamp)
+
+;; 時間範囲バリデーション用のspec
+(s/def ::time-range-request
+  (s/keys :req [::start-time ::end-time]))
+
+(s/def ::valid-time-range
+  (s/and ::time-range-request
+         #(.before (::start-time %) (::end-time %))))
+
+;; バリデーション用ヘルパー関数
+(defn valid-time-range?
+  "開始時間が終了時間より前であることを確認"
+  [time-range]
+  (.before (::start-time time-range) (::end-time time-range)))
+
+(s/fdef valid-time-range?
+  :args (s/cat :time-range ::time-range-request)
+  :ret boolean?)
+
+;; 時間範囲の長さ計算
+(defn time-range-duration-minutes
+  "時間範囲から分単位の長さを計算"
+  [time-range]
+  (let [start (::start-time time-range)
+        end (::end-time time-range)]
+    (long (/ (- (.getTime end) (.getTime start)) 60000))))
+
+(s/fdef time-range-duration-minutes
+  :args (s/cat :time-range ::valid-time-range)
+  :ret ::duration-minutes)
+
+;; 現在時刻の取得
+(defn current-timestamp
+  "現在時刻をjava.util.Dateで取得"
+  []
+  (java.util.Date.))
+
+(s/fdef current-timestamp
+  :args (s/cat)
+  :ret ::timestamp)
+
+;; 文字列の空白除去とnormalization
+(defn normalize-string
+  "文字列の前後空白を除去し、空文字列の場合はnilを返す"
+  [s]
+  (when s
+    (let [trimmed (str/trim s)]
+      (when-not (str/blank? trimmed)
+        trimmed))))
+
+(s/fdef normalize-string
+  :args (s/cat :s (s/nilable string?))
+  :ret ::optional-string)
+
+;; ラベルのnormalization
+(defn normalize-labels
+  "ラベル配列から空文字列を除去"
+  [labels]
+  (->> labels
+       (map normalize-string)
+       (filter some?)
+       (vec)))
+
+(s/fdef normalize-labels
+  :args (s/cat :labels (s/coll-of (s/nilable string?)))
+  :ret ::labels)

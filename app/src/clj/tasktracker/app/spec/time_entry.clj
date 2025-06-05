@@ -39,8 +39,7 @@
            :opt [::end-time
                  ::duration-minutes
                  ::memo])
-   core/valid-time-range?
-   core/valid-duration?))
+   core/valid-time-range?))
 
 ;; 時間記録開始用
 (s/def ::time-entry-start-request

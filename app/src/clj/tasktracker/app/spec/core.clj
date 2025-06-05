@@ -37,26 +37,19 @@
 (s/def ::title ::non-empty-string)
 
 ;; バリデーション用ヘルパー関数
+(s/def ::start-time inst?)
+(s/def ::end-time inst?)
+
+(s/fdef valid-time-range?
+  :args (s/keys ::req [::start-time ::end-time])
+  :ret boolean?)
+
 (defn valid-time-range?
   "開始時間が終了時間より前であることを確認"
-  [{:keys [start-time end-time]}]
+  [{:keys [::start-time ::end-time]}]
   (if (and start-time end-time)
     (.before start-time end-time)
     true))
-(s/fdef valid-time-range?
-  :args (s/cat :time-map (s/keys :req-un [::start-time ::end-time]))
-  :ret boolean?)
-
-(defn valid-duration?
-  "duration-minutesが開始・終了時間と整合していることを確認"
-  [{:keys [start-time end-time duration-minutes]}]
-  (if (and start-time end-time duration-minutes)
-    (let [calculated-minutes (/ (- (.getTime end-time) (.getTime start-time)) 60000)]
-      (> (Math/abs (- calculated-minutes duration-minutes)) 1))
-    true))
-(s/fdef valid-duration?
-  :args (s/cat :time-map (s/keys ::req-un [::start-time ::end-time ::duration-minutes]))
-  :ret boolean?)
 
 ;; プロジェクト関連
 (s/def ::project-name ::non-empty-string)

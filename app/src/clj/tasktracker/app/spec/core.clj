@@ -52,15 +52,15 @@
   (s/and ::time-range-request
          #(.before (::start-time %) (::end-time %))))
 
-;; バリデーション用ヘルパー関数
-(defn valid-time-range?
-  "開始時間が終了時間より前であることを確認"
-  [time-range]
-  (.before (::start-time time-range) (::end-time time-range)))
+;; ;; バリデーション用ヘルパー関数
+;; (defn valid-time-range?
+;;   "開始時間が終了時間より前であることを確認"
+;;   [time-range]
+;;   (.before (::start-time time-range) (::end-time time-range)))
 
-(s/fdef valid-time-range?
-  :args (s/cat :time-range ::time-range-request)
-  :ret boolean?)
+;; (s/fdef valid-time-range?
+;;   :args (s/cat :time-range ::time-range-request)
+;;   :ret boolean?)
 
 ;; 時間範囲の長さ計算
 (defn time-range-duration-minutes

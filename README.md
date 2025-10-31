@@ -88,9 +88,7 @@ dotnet run --project src/TaskTracker.Handler
 TaskTracker/
 ├── docs/                      # 設計ドキュメント
 │   ├── architecture.md        # アーキテクチャ設計書
-│   ├── domain-model.md        # ドメインモデル設計書
-│   ├── database-schema.md     # データベーススキーマ
-│   └── implementation-plan.md # 実装計画
+│   └── database-schema.md     # データベーススキーマ
 ├── src/
 │   ├── TaskTracker.Domain/    # ドメイン層（純粋なビジネスロジック）
 │   ├── TaskTracker.Application/ # アプリケーション層（ユースケース）

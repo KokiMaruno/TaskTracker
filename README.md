@@ -151,11 +151,3 @@ RESTful API（JSON）
 ## ライセンス
 
 MIT License - 詳細は[LICENSE](LICENSE)を参照
-
-## ドキュメント
-
-詳細な設計ドキュメントは`docs/`ディレクトリを参照してください：
-
-- [アーキテクチャ設計書](docs/architecture.md)
-- [ドメインモデル設計書](docs/domain_model.md)
-- [データベーススキーマ](docs/database_schema.md)

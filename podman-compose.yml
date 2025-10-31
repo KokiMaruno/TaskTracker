@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: docker.io/library/postgres:16
+    container_name: tasktracker_db
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    container_name: tasktracker_app
+    volumes:
+      - .:/workspace:Z
+    working_dir: /workspace
+    command: sleep infinity
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+
+volumes:
+  postgres_data:

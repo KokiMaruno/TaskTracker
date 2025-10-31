@@ -1,0 +1,12 @@
+{
+  "name": "TaskTracker Development",
+  "dockerComposeFile": "../podman-compose.yml",
+  "service": "app",
+  "customizations": {
+    "jetbrains": {
+      "backend": "Rider"
+    }
+  },
+  "postCreateCommand": "dotnet restore",
+  "postCreateCommand": "echo 'set bell-style none' >> ~/.inputrc"
+}
